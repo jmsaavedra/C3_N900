@@ -64,7 +64,7 @@ class HapticGuideUI:
 
  def __init__(self):
    self.app = hildon.Program.get_instance()    
-   gtk.set_application_name("C3 Prototype v0.1")
+   gtk.set_application_name("C3 Prototype v0.2")
 
    # This is the brilliant GTK+ Glade builder that lets me keep the entire UI
    # code in a .glade (xml) file to be loaded dynamically.
