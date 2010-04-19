@@ -9,10 +9,20 @@ Created on Apr 5, 2010
 import sys
 import gtk
 import gobject
-import hildon
+try:
+    import hildon
+    has_hildon = True
+except ImportError:
+    print "No hildon module"
+    has_hildon = False
 import threading
 
-import location
+try:
+    import location
+    has_location = True
+except ImportError:
+    print "No location module"
+    has_location = False
 
 # My custom data manager module
 from BeltConnection import *
@@ -63,8 +73,20 @@ class HapticGuideUI:
    return True
 
  def __init__(self):
+<<<<<<< HEAD
    self.app = hildon.Program.get_instance()    
    gtk.set_application_name("C3 Prototype v0.2")
+=======
+   try:
+       self.app = hildon.Program.get_instance()    
+   except:
+       self.app = hildon.Program()
+
+   try:
+       gtk.set_application_name("C3 Prototype v0.1")
+   except:
+       pass
+>>>>>>> e55b4e2c9490a555dd4bcf1e62c03d6962d97411
 
    # This is the brilliant GTK+ Glade builder that lets me keep the entire UI
    # code in a .glade (xml) file to be loaded dynamically.
@@ -98,15 +120,16 @@ class HapticGuideUI:
                }
    builder.connect_signals(signals)
    
-   self.control = location.GPSDControl.get_default()
-   
-   self.device = location.GPSDevice()
-   self.control.set_properties(preferred_method=location.METHOD_USER_SELECTED,
-                          preferred_interval=location.INTERVAL_DEFAULT)
-    
-   self.control.connect("error-verbose", self.on_error, self)
-   self.device.connect("changed", self.on_changed, self.control)
-   self.control.connect("gpsd-stopped", self.on_stop, self)
+   if has_location:
+       self.control = location.GPSDControl.get_default()
+       
+       self.device = location.GPSDevice()
+       self.control.set_properties(preferred_method=location.METHOD_USER_SELECTED,
+                              preferred_interval=location.INTERVAL_DEFAULT)
+        
+       self.control.connect("error-verbose", self.on_error, self)
+       self.device.connect("changed", self.on_changed, self.control)
+       self.control.connect("gpsd-stopped", self.on_stop, self)
    
 
 
