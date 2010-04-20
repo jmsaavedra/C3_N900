@@ -12,7 +12,7 @@ git pull git@github.com:jmsaavedra/C3_N900.git master
 
 --made changes? upload them!--
 git commit -a
-	-after committing, hit shift-z-z after entering change descrip
+	-after committing, hit 'i', enter change descrip, then 'esc' then 'shift-z-z'
 git push git@github.com:jmsaavedra/C3_N900.git master
 	-done!
 
