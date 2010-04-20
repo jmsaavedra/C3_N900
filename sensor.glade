@@ -3,7 +3,7 @@
 <!-- interface-requires gtk+ 2.8 -->
 <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="windowMain">
-    <property name="title" translatable="yes">C3 Prototype v0.1</property>
+    <property name="title" translatable="yes">C3 Prototype v0.2</property>
     <property name="window_position">center-on-parent</property>
     <property name="default_width">800</property>
     <property name="default_height">480</property>
@@ -184,6 +184,7 @@
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Debug:</property>
                     <attributes>
+                      <attribute name="weight" value="ultrabold"/>
                       <attribute name="foreground" value="#ffffffffffff"/>
                       <attribute name="background" value="#ffff4e254e25"/>
                     </attributes>
@@ -254,7 +255,31 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkButton" id="buttonAddMedia">
+                <property name="label" translatable="yes">Add Media</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="buttonUserLogin">
+                <property name="label" translatable="yes">Login</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="yalign">0</property>
+                <property name="image_position">bottom</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="pack_type">end</property>
+                <property name="position">3</property>
+              </packing>
             </child>
           </object>
           <packing>
