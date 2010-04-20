@@ -1,0 +1,361 @@
+<?xml version="1.0"?>
+<interface>
+<!-- interface-requires gtk+ 2.8 -->
+<!-- interface-naming-policy project-wide -->
+  <object class="GtkWindow" id="windowMain">
+    <property name="title" translatable="yes">C3 Prototype v0.2</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="default_width">800</property>
+    <property name="default_height">480</property>
+    <signal name="destroy_event" handler="on_windowMain_destroy_event"/>
+    <signal name="delete_event" handler="on_windowMain_delete_event"/>
+    <child>
+      <object class="GtkHBox" id="hbox1">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkVBox" id="vboxMain">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkHBox" id="hboxSensor1">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel" id="labelSensor1Header">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Sensor 1</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="labelSensor1Data">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">no input</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHBox" id="hboxSensor2">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel" id="labelSensor2Header">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Sensor 2</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="labelSensor2Data">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">no input</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="labelDatetime">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">no date/time</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHBox" id="hbox2">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel" id="labelLatHeader">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Lat:</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="labelLatData">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">no input</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="labelLonHeader">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Long:</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="labelLonData">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">no input</property>
+                  </object>
+                  <packing>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHBox" id="hbox3">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel" id="labelCounterHeader">
+                    <property name="visible">True</property>
+                    <property name="yalign">0.46000000834465027</property>
+                    <property name="label" translatable="yes">Reading Number:</property>
+                    <property name="justify">fill</property>
+                    <property name="ellipsize">middle</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="labelCounterData">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">no input</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHSeparator" id="hseparator1">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">5</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHBox" id="hbox4">
+                <property name="visible">True</property>
+                <property name="border_width">2</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel" id="labelDebug">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Debug:</property>
+                    <attributes>
+                      <attribute name="weight" value="ultrabold"/>
+                      <attribute name="foreground" value="#ffffffffffff"/>
+                      <attribute name="background" value="#ffff4e254e25"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="labelDebugData">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">bugz</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">6</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkVSeparator" id="vseparator1">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkVBox" id="vbox1">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkButton" id="buttonBtConnect">
+                <property name="label" translatable="yes">BT Connect</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="on_buttonBtConnect_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="buttonGpsConnect">
+                <property name="label" translatable="yes">GPS Connect</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="on_buttonGpsConnect_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="buttonAddMedia">
+                <property name="label" translatable="yes">Add Media</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="buttonUserLogin">
+                <property name="label" translatable="yes">Login</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="yalign">0</property>
+                <property name="image_position">bottom</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="pack_type">end</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkColorSelectionDialog" id="colorselectiondialog1">
+    <property name="border_width">5</property>
+    <property name="type_hint">normal</property>
+    <child internal-child="color_selection">
+      <object class="GtkColorSelection" id="colorsel-color_selection1">
+        <property name="visible">True</property>
+        <property name="border_width">5</property>
+        <property name="orientation">vertical</property>
+        <property name="current_color">#ffffffffffff</property>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="0">colorsel-help_button1</action-widget>
+      <action-widget response="0">colorsel-ok_button1</action-widget>
+      <action-widget response="0">colorsel-cancel_button1</action-widget>
+    </action-widgets>
+    <child internal-child="help_button">
+      <object class="GtkButton" id="colorsel-help_button1">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="can_default">True</property>
+        <property name="receives_default">True</property>
+        <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="0">colorsel-help_button1</action-widget>
+      <action-widget response="0">colorsel-ok_button1</action-widget>
+      <action-widget response="0">colorsel-cancel_button1</action-widget>
+    </action-widgets>
+    <child internal-child="cancel_button">
+      <object class="GtkButton" id="colorsel-cancel_button1">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="can_default">True</property>
+        <property name="receives_default">True</property>
+        <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="0">colorsel-help_button1</action-widget>
+      <action-widget response="0">colorsel-ok_button1</action-widget>
+      <action-widget response="0">colorsel-cancel_button1</action-widget>
+    </action-widgets>
+    <child internal-child="ok_button">
+      <object class="GtkButton" id="colorsel-ok_button1">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="can_default">True</property>
+        <property name="receives_default">True</property>
+        <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="0">colorsel-help_button1</action-widget>
+      <action-widget response="0">colorsel-ok_button1</action-widget>
+      <action-widget response="0">colorsel-cancel_button1</action-widget>
+    </action-widgets>
+  </object>
+</interface>
