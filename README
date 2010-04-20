@@ -3,7 +3,18 @@
 These are python and glade files for use on the Nokia N900 phone as 
 prototypes for the C3 project.
 
-here is a test at 2:58pm on April 20, 2010.
+here is a test at 2:58pm on April 20, 2010. 
+
+JOE'S GIT CHEAT SHEET:
+
+--pull current master--
+git pull git@github.com:jmsaavedra/C3_N900.git master
+
+--made changes? upload them!--
+git commit -a
+	-after committing, hit shift-z-z after entering change descrip
+git push git@github.com:jmsaavedra/C3_N900.git master
+	-done!
 
 authors include but are not limited to
 
