@@ -17,6 +17,11 @@ except ImportError:
     has_hildon = False
 import threading
 
+import pygst
+pygst.require("0.10")
+import gst
+import time
+
 try:
     import location
     has_location = True
@@ -58,6 +63,13 @@ class HapticGuideUI:
  def on_GpsConnect_click(self, widget, data=None): 
    self.labelDebugData.set_text("GPS Connecting...") 
    gobject.idle_add(self.start_location, self.control)
+   
+ def on_report_click(self, dummy1, dummy2=None):
+    print "Clicked"
+    self.save_file = True
+    return True
+
+
 
  def loop(self):
    # Get latest heading update from belt manager and display update if different from prev
@@ -73,6 +85,10 @@ class HapticGuideUI:
    return True
 
  def __init__(self):
+     
+   self.save_file = False
+   self.screen_sink = None
+   
    try:
        self.app = hildon.Program.get_instance()    
    except:
@@ -97,6 +113,18 @@ class HapticGuideUI:
    self.labelLatData = builder.get_object("labelLatData")
    self.labelLonData = builder.get_object("labelLonData")
    self.labelDatetime = builder.get_object("labelDatetime")
+   self.screen = builder.get_object("screen")
+   self.buttonReport = builder.get_object("buttonReport")
+   
+   self.screen.set_size_request(640, 480)
+   self.screen.add_events(gtk.gdk.BUTTON_PRESS_MASK)
+   self.screen.connect("expose-event", self.expose_cb, self.screen_sink);
+   self.screen.connect("button_press_event", self.on_report_click);
+   
+   
+
+   self.buttonReport.connect("clicked", self.on_report_click)
+
 
    # Create the belt object to handle data communication
    self.belt = BeltConnection()
@@ -125,6 +153,99 @@ class HapticGuideUI:
        self.control.connect("error-verbose", self.on_error, self)
        self.device.connect("changed", self.on_changed, self.control)
        self.control.connect("gpsd-stopped", self.on_stop, self)
+       
+   self.pipeline = gst.Pipeline("c3_camera_pipeline")
+   self.create_pipeline()
+
+ def expose_cb(self, dummy1, dummy2, dummy3):
+    print "Expose event"
+    self.screen_sink.set_xwindow_id(self.screen.window.xid)    
+
+ def buffer_cb(self, pad, buffer):
+    if self.save_file:
+        width = 640
+        height = 480
+
+        size = 3 * width * height 
+
+        if buffer.size < size:
+            data = buffer.data + chr(0) * (size-buffer.size)
+        else:
+            data = buffer.data
+
+        pb = gtk.gdk.pixbuf_new_from_data(data, gtk.gdk.COLORSPACE_RGB, False, 8, width, height, width * 3)
+        pb.save("test.jpg", "jpeg", {"quality":"100"})
+
+        pb2 = pb.scale_simple(120,90,gtk.gdk.INTERP_NEAREST)
+
+        pb2.save("text_thumbnail.jpg", "jpeg", {"quality":"60"})
+
+        #thumb.clear()
+        #thumb.set_from_file("test.jpg")
+        #print thumb
+
+        self.save_file = False
+
+    return True
+
+ def create_pipeline(self):
+    src = gst.element_factory_make("v4l2src", "src") 
+    src.set_property ("device", "/dev/video0")
+    src.set_property ("always-copy", False)
+    #src.set_property ("width", 640)
+    #src.set_property ("height", 480)
+    #src.set_property ("framerate", 30)
+    #src = gst.element_factory_make("v4l2camsrc", "src")
+    self.pipeline.add(src)
+    
+    screen_csp = gst.element_factory_make("ffmpegcolorspace", "screen_csp")
+    self.pipeline.add(screen_csp)
+    
+    screen_caps = gst.element_factory_make("capsfilter", "screen_caps")
+    # Alternate caps to run outside Internet Tablet (e.g. in a PC with webcam)
+    screen_caps.set_property('caps', gst.caps_from_string("video/x-raw-rgb,width=640,height=480,bpp=24,depth=24,framerate=30/1"))
+    #screen_caps.set_property('caps', gst.caps_from_string("video/x-raw-yuv,width=640,height=480,bpp=24,depth=24,framerate=30/1"))
+    
+    self.pipeline.add(screen_caps)
+    
+    
+    image_csp = gst.element_factory_make("ffmpegcolorspace", "image_csp")
+    self.pipeline.add(image_csp)
+    
+    image_caps = gst.element_factory_make("capsfilter", "image_caps")
+    # Alternate caps to run outside Internet Tablet (e.g. in a PC with webcam)
+    image_caps.set_property('caps', gst.caps_from_string("video/x-raw-rgb,width=640,height=480,bpp=24,depth=24,framerate=30/1"))
+    self.pipeline.add(image_caps)
+    
+    
+    tee = gst.element_factory_make("tee", "tee")
+    self.pipeline.add(tee)
+    
+    screen_queue = gst.element_factory_make("queue", "screen_queue")
+    self.pipeline.add(screen_queue)
+    
+    self.screen_sink = gst.element_factory_make("xvimagesink", "screen_sink")
+    self.pipeline.add(self.screen_sink)
+    
+    image_queue = gst.element_factory_make("queue", "image_queue")
+    self.pipeline.add(image_queue)
+    
+    image_sink = gst.element_factory_make("fakesink", "image_sink")
+    self.pipeline.add(image_sink)
+    
+    pad = image_sink.get_pad('sink')
+    pad.add_buffer_probe(self.buffer_cb)
+    
+    gst.element_link_many(src, tee, screen_caps, screen_csp, screen_queue, self.screen_sink)
+    #gst.element_link_many(src, screen_caps, tee, screen_queue, sink)
+    gst.element_link_many(tee, image_caps, image_csp, image_queue, image_sink)
+    
+    self.window.show_all()
+    
+    self.pipeline.set_state(gst.STATE_PLAYING)
+    
+
+
    
 
 
