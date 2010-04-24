@@ -190,6 +190,7 @@ class HapticGuideUI:
  def create_pipeline(self):
     src = gst.element_factory_make("v4l2src", "src") 
     src.set_property ("device", "/dev/video0")
+    #check dev for video call if this doesn't work
     src.set_property ("always-copy", False)
     #src.set_property ("width", 640)
     #src.set_property ("height", 480)
