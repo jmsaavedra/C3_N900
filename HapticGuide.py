@@ -63,9 +63,10 @@ class HapticGuideUI:
  def on_GpsConnect_click(self, widget, data=None): 
    self.labelDebugData.set_text("GPS Connecting...") 
    gobject.idle_add(self.start_location, self.control)
+   self.labelDebugData.set_text("GPS Connected") 
    
  def on_report_click(self, dummy1, dummy2=None):
-    print "Clicked"
+    self.labelDebugData.set_text("Clicked")
     self.save_file = True
     return True
 
@@ -79,7 +80,6 @@ class HapticGuideUI:
    self.sensor1Data.set_text('%d' %(self.sensor1))  
    self.sensor2Data.set_text('%d' %(self.sensor2))
    self.labelCounterData.set_text('%d' %(self.counter))
-   self.labelDebugData.set_text(self.belt.status)
    
    self.counter+=1
    return True
@@ -87,6 +87,7 @@ class HapticGuideUI:
  def __init__(self):     
    self.save_file = False
    self.screen_sink = None
+   self.screen_set_xid = False
    
    try:
        self.app = hildon.Program.get_instance()    
@@ -115,14 +116,10 @@ class HapticGuideUI:
    self.screen = builder.get_object("screen")
    self.buttonReport = builder.get_object("buttonReport")
    
-   self.screen.set_size_request(640, 480)
+   self.screen.set_size_request(640, 350)
    self.screen.add_events(gtk.gdk.BUTTON_PRESS_MASK)
-   self.screen.connect("expose-event", self.expose_cb, self.screen_sink);
-   self.screen.connect("button_press_event", self.on_report_click);
-   
-   
-
-   self.buttonReport.connect("clicked", self.on_report_click)
+   self.screen.connect("expose-event", self.expose_cb, self.screen_sink)
+   #self.screen.connect("button_press_event", self.on_report_click)
 
 
    # Create the belt object to handle data communication
@@ -138,7 +135,8 @@ class HapticGuideUI:
    signals = { "on_windowMain_destroy_event" : self.on_window_destroy,
                "on_windowMain_delete_event" : self.on_window_delete, 
                "on_buttonBtConnect_clicked" : self.on_connect_click,
-               "on_buttonGpsConnect_clicked" : self.on_GpsConnect_click
+               "on_buttonGpsConnect_clicked" : self.on_GpsConnect_click,
+               "on_buttonReport_clicked": self.on_report_click
                }
    builder.connect_signals(signals)
    
@@ -154,13 +152,20 @@ class HapticGuideUI:
        self.control.connect("gpsd-stopped", self.on_stop, self)
        
    self.pipeline = gst.Pipeline("c3_camera_pipeline")
+   self.labelDebugData.set_text("try")
    self.create_pipeline()
 
  def expose_cb(self, dummy1, dummy2, dummy3):
-    print "Expose event"
-    self.screen_sink.set_xwindow_id(self.screen.window.xid)    
-
+    #self.labelDebugData.set_text("Expose event")
+    print dummy1
+    print dummy1.has_screen()
+    print dir(dummy1.get_screen().get_display())
+    #self.buffer_cb(self.pad, dummy1.get_screen())
+    self.screen_sink.set_xwindow_id(dummy1.window.xid)
+    self.screen_set_xid = True
+    
  def buffer_cb(self, pad, buffer):
+    self.labelDebugData.set_text("buffer_cb")
     if self.save_file:
         width = 640
         height = 480
@@ -172,12 +177,14 @@ class HapticGuideUI:
         else:
             data = buffer.data
 
+        self.labelDebugData.set_text("saving buffer")
         pb = gtk.gdk.pixbuf_new_from_data(data, gtk.gdk.COLORSPACE_RGB, False, 8, width, height, width * 3)
-        pb.save("test.jpg", "jpeg", {"quality":"100"})
+        pb.save("/home/user/MyDocs/test.jpg", "jpeg", {"quality":"100"})
 
-        pb2 = pb.scale_simple(120,90,gtk.gdk.INTERP_NEAREST)
-
-        pb2.save("text_thumbnail.jpg", "jpeg", {"quality":"60"})
+#        pb2 = pb.scale_simple(120,90,gtk.gdk.INTERP_NEAREST)
+#
+#        self.labelDebugData.set_text("saving buffer again")
+#        pb2.save("/home/user/text_thumbnail.jpg", "jpeg", {"quality":"60"})
 
         #thumb.clear()
         #thumb.set_from_file("test.jpg")
@@ -188,10 +195,11 @@ class HapticGuideUI:
     return True
 
  def create_pipeline(self):
-    src = gst.element_factory_make("v4l2src", "src") 
+    self.labelDebugData.set_text("start pipeline")
+    src = gst.element_factory_make("v4l2camsrc", "src") 
     src.set_property ("device", "/dev/video0")
     #check dev for video call if this doesn't work
-    src.set_property ("always-copy", False)
+    #src.set_property ("always-copy", True)
     #src.set_property ("width", 640)
     #src.set_property ("height", 480)
     #src.set_property ("framerate", 30)
@@ -203,7 +211,7 @@ class HapticGuideUI:
     
     screen_caps = gst.element_factory_make("capsfilter", "screen_caps")
     # Alternate caps to run outside Internet Tablet (e.g. in a PC with webcam)
-    screen_caps.set_property('caps', gst.caps_from_string("video/x-raw-rgb,width=640,height=480,bpp=24,depth=24,framerate=30/1"))
+    screen_caps.set_property('caps', gst.caps_from_string("video/x-raw-yuv,width=640,height=480"))
     #screen_caps.set_property('caps', gst.caps_from_string("video/x-raw-yuv,width=640,height=480,bpp=24,depth=24,framerate=30/1"))
     
     self.pipeline.add(screen_caps)
@@ -214,7 +222,7 @@ class HapticGuideUI:
     
     image_caps = gst.element_factory_make("capsfilter", "image_caps")
     # Alternate caps to run outside Internet Tablet (e.g. in a PC with webcam)
-    image_caps.set_property('caps', gst.caps_from_string("video/x-raw-rgb,width=640,height=480,bpp=24,depth=24,framerate=30/1"))
+    image_caps.set_property('caps', gst.caps_from_string("video/x-raw-yuv,width=640,height=480"))
     self.pipeline.add(image_caps)
     
     
@@ -233,8 +241,8 @@ class HapticGuideUI:
     image_sink = gst.element_factory_make("fakesink", "image_sink")
     self.pipeline.add(image_sink)
     
-    pad = image_sink.get_pad('sink')
-    pad.add_buffer_probe(self.buffer_cb)
+    self.pad = image_sink.get_pad('sink')
+    self.pad.add_buffer_probe(self.buffer_cb)
     
     gst.element_link_many(src, tee, screen_caps, screen_csp, screen_queue, self.screen_sink)
     #gst.element_link_many(src, screen_caps, tee, screen_queue, sink)
@@ -244,8 +252,7 @@ class HapticGuideUI:
     
     self.pipeline.set_state(gst.STATE_PLAYING)
     
-
-
+    self.labelDebugData.set_text("end pipeline")
    
 
 
@@ -260,8 +267,8 @@ class HapticGuideUI:
         return
     if device.fix:
         if device.fix[1] & location.GPS_DEVICE_LATLONG_SET:
-            print "lat = %f, long = %f" % device.fix[4:6]
-            print device.fix
+            #print "lat = %f, long = %f" % device.fix[4:6]
+            #print device.fix
             self.labelLatData.set_text("%f" % device.fix[4])
             self.labelLonData.set_text("%f" % device.fix[5])
             self.labelDatetime.set_text("%s" % device.fix[2])
